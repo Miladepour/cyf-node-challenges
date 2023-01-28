@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 let listsOfMembers = [
   {
@@ -21,6 +25,20 @@ app.get("/lists", function (request, response) {
     response.status(200).json(listsOfMembers);
   } else {
     response.status(200).json([]);
+  }
+});
+app.get("/lists/:name", function (request, response) {
+  console.log(request.params, "----> request.params");
+
+  const findItem = request.params.name;
+
+  const selectedName = listsOfMembers.filter((user) => user.name === findItem);
+  if (!selectedName.length == 0) {
+    response.status(200).json(selectedName);
+  } else {
+    response
+      .status(404)
+      .json(`${findItem} is not listed, Please try with another name!`);
   }
 });
 
