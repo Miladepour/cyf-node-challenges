@@ -27,11 +27,11 @@ app.get("/lists", function (request, response) {
     response.status(200).json([]);
   }
 });
+
 app.get("/lists/:name", function (request, response) {
   console.log(request.params, "----> request.params");
 
   const findItem = request.params.name;
-
   const selectedName = listsOfMembers.filter((user) => user.name === findItem);
   if (!selectedName.length == 0) {
     response.status(200).json(selectedName);
@@ -39,6 +39,17 @@ app.get("/lists/:name", function (request, response) {
     response
       .status(404)
       .json(`${findItem} is not listed, Please try with another name!`);
+  }
+});
+
+app.delete("/lists/:name", function (request, response) {
+  const findItem = request.params.name;
+  const index = listsOfMembers.findIndex((user) => user.name === findItem);
+  if (index !== -1) {
+    listsOfMembers.splice(index, 1);
+    response.status(200).send("Successfully deleted");
+  } else {
+    response.status(404).send("Item not found");
   }
 });
 
